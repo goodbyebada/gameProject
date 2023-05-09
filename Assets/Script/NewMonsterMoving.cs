@@ -9,66 +9,96 @@ public class NewMonsterMoving : MonoBehaviour
 {
 	public Transform target;
 	public Vector3 direction;
-	public float velocity;
-	public float default_velocity;
-	public float accelaration;
+	public float moveSpeed = 4.2f;
 	public Vector3 default_direction;
 	private Vector3 newPosition;
 
-	private float chasingDistance = 1.5f;
-
+	private float chasingDistance = 2.5f;
+	public float distanceToKeep = 0.5f;
 
 	public Tilemap tilemap;
+	private float distance;
 
 	//효과음 
 	public AudioSource audioSource;
 	public AudioClip bgm;
 	private bool isPlaying;
 
+
+	void setRandomDirection()
+    {
+		// 자동으로 움직일 방향 벡터
+		default_direction.x = Random.Range(0, 1.0f); // 0~1.0f 랜덤한 값 direction이 
+		default_direction.y = Random.Range(0, 1.0f);
+	}
+
 	void Start()
 	{
+        tilemap = GameObject.FindGameObjectWithTag("Tilemap").GetComponent<Tilemap>();
 
-
-		tilemap = GameObject.FindGameObjectWithTag("Tilemap").GetComponent<Tilemap>();
-
-		// 자동으로 움직일 방향 벡터
-		default_direction.x = Random.Range(0, 1.0f);
-		default_direction.y = Random.Range(0, 1.0f);
-		// 가속도 지정 (추후 힘과 질량, 거리 등 계산해서 수정할 것)
-		accelaration = 0.1f;
-		default_velocity = 0.1f;
-
-
+		setRandomDirection();
 		//효과음
 		audioSource = GetComponent<AudioSource>();
         isPlaying = false;
 		audioSource.clip = bgm;
 		audioSource.loop = true;
-	}
+
+}
+
+	Vector3 getNextPosition()
+	{
+        //return transform.position + default_direction * moveSpeed * Time.deltaTime;
+		
+        return new Vector3(transform.position.x + (default_direction.x * moveSpeed * Time.deltaTime),
+                                                   transform.position.y,
+                                                   transform.position.z);
+		//x축으로만 이동하는 getNewPosition
+    }
+
 
 	void Update()
 	{
 		// Player의 현재 위치를 받아오는 Object
 		target = GameObject.FindGameObjectWithTag("Student").transform;
 		// Player와 객체 간의 거리 계산
-		float distance = Vector3.Distance(target.position, transform.position);
+		//transform.position : 경비원 위치
+
+		distance = Vector3.Distance(target.position, transform.position);
 
 
-        if (distance <= chasingDistance)
+		if (distance <= chasingDistance)
 		{
 			print("player 감지! 효과음 상태: " + audioSource.isPlaying);
-			MoveToTarget();
-			// 일정 거리안에 있다가 다시 멀어졌을 때, 일정거리안에 있었던 player의 방향으로 움직임
-			default_direction = direction;
+			MoveToTarget(); //타켓을 향해 이동
+		
 		}
-		// 일정거리 밖에 있을 시, 속도 초기화하고 해당 방향으로 무빙 
 		else
 		{
-			//velocity = 0.0f;
-			newPosition = new Vector3(transform.position.x + (default_direction.x * default_velocity),
-												   transform.position.y + (default_direction.y * default_velocity),
-												   transform.position.z);
+
+				newPosition = getNextPosition(); //default_direction 방향으로 이동 -> start에서 default_direction.x,default_direction.y 랜덤 0~1.0의 값을 가지고 있음
+												 //x축 방향으로만 이동
+			
+				//newPosition = new Vector3(transform.position.x ,
+				//								   transform.position.y + +(default_direction.y * moveSpeed * Time.deltaTime),
+				//								   transform.position.z);	
 		}
+
+		Vector3Int cellPosition = tilemap.WorldToCell(newPosition); // cell화 시킨 cellPosition -> tilemap에 있는지 확인
+		if (tilemap.HasTile(cellPosition))
+		{
+			print("tilemap has Tile");
+			transform.position = newPosition; //tilemap 안에 있다면 현재 위치가 됨 -> 
+
+		}
+		else
+		{
+			print("	타일에 없다면 반대 방향으로 이동해");
+            //setRandomDirection(); //같은 랜덤 값 반환하느라 움직이지 않음 -> 계속 tilemap에 없는 값 반환 -> 다시 랜덤 무한반복 -> 안움직임 
+            default_direction.x = -default_direction.x;
+       
+            //타일에 없다면 x축으로 반대 방향으로 이동 
+
+        }
 
 
 
@@ -84,18 +114,6 @@ public class NewMonsterMoving : MonoBehaviour
 			isPlaying = false;
         }
 		playSound();
-
-		Vector3Int cellPosition = tilemap.WorldToCell(newPosition);
-        if (tilemap.HasTile(cellPosition))
-        {
-            transform.position = newPosition;
-		
-        }
-        else {
-			direction = -direction;
-		
-		}
-
 	
     }
 
@@ -113,25 +131,29 @@ public class NewMonsterMoving : MonoBehaviour
 			print("===BGM STOP ===");
 		}
 
-
 	}
 
 
 	public void MoveToTarget()
 	{
-		// Player의 위치와 이 객체의 위치를 빼고 단위 벡터화 한다.
-		direction = (target.position - transform.position).normalized;
-		// 초가 아닌 한 프레임으로 가속도 계산하여 속도 증가 
-		//velocity += accelaration * Time.deltaTime;
-		// 해당 방향으로 무빙
-		newPosition = new Vector3(transform.position.x + (direction.x * velocity),
-											   transform.position.y + (direction.y * velocity),
-												  transform.position.z);
+		default_direction = (target.position - transform.position).normalized;
+		// Player의 위치와 이 객체의 위치 사이의 거리를 단위 벡터화 => 방향을 알려줌 
+
+		if (distance < distanceToKeep)
+		{
+			print("distance < distanceToKeep");
+			//플레이어랑 거리 유지해야함 하지만 유지하지 못했을때 
+			// 플레이어 캐릭터 위치에서 일정 거리만큼 떨어뜨림
+			default_direction *= -1f;
+
+		}
+
+		newPosition = transform.position + default_direction * moveSpeed * Time.deltaTime;
 
 	}
 
 
-    private void OnDrawGizmosSelected()
+        private void OnDrawGizmosSelected()
     {
         // Draw a sphere around the enemy to show the chasing distance
         Gizmos.color = Color.red;

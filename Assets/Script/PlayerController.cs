@@ -8,9 +8,15 @@ using UnityEngine.Tilemaps;
 public class PlayerController : MonoBehaviour
 {
     
-    public float moveSpeed = 5f; // 이동 속도
+    public float moveSpeed = 5.5f; // 이동 속도
     public Tilemap tilemap; // 타일맵
     public int health = 3;
+    //GameObject ForDestroy;
+
+    //private void Start()
+    //{
+    //    //ForDestroy = GameObject.Find("Chocolate");
+    //}
 
     private void Update()
     {
@@ -29,45 +35,49 @@ public class PlayerController : MonoBehaviour
         Vector3Int cellPosition = tilemap.WorldToCell(newPosition);
         if (tilemap.HasTile(cellPosition))
         {
+            
             // 타일맵 내에 있다면 캐릭터 이동
             transform.position = newPosition;
         }
-
-        if(health == 0)
-        {
-            Application.Quit();
-        }
+        
     }
 
-   private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
 
     {
 
-        if (collision.gameObject.CompareTag("Monster"))
-        {
-            // 플레이어와 충돌한 경우 처리
 
-            //print("wtf");
-            //health--;
-            //print("health :" + health);
+        if (collision.gameObject.CompareTag("Item")) {
+            //moveSpeed += 1.0f;
+            //Destroy(ForDestroy);
+            print("초콜릿 찾았다 ");
 
         }
-        if ( health == 0) {
-            //print("플레이어는 죽었습니다 . ");
-            //Application.Quit();
- 
+
+        //    if (collision.gameObject.CompareTag("Monster"))
+        //    {
+        //        // 플레이어와 충돌한 경우 처리
 
 
+        //        health--;
+        //        print("health :" + health);
+        //        moveSpeed -= 0.5f;
+
+        //    }
+        //    if (health == 0)
+        //    {
+        //        print("플레이어는 죽었습니다 . ");
+        //        Application.Quit();
 
 
-        }
+        //    }
 
 
 
     }
 
 
-   
+
 
 }
 
