@@ -3,21 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-//using UnityEngine;
-
 public class PlayerController : MonoBehaviour
 {
     
     public float moveSpeed = 5.5f; // 이동 속도
     public Tilemap tilemap; // 타일맵
     public int health = 3;
-    //GameObject ForDestroy;
+    public GameObject ForDestroy;
 
-    //private void Start()
-    //{
-    //    //ForDestroy = GameObject.Find("Chocolate");
-    //}
 
+
+    void Start()
+    {
+        ForDestroy = GameObject.Find("Chocolate");        //삭제할 오브젝트 참조.
+
+                               //삭제, 파괴 함수 Destroy에 오브젝트 이름 참조.
+
+    }
     private void Update()
     {
         //수평 방향 입력 받기
@@ -39,44 +41,42 @@ public class PlayerController : MonoBehaviour
             // 타일맵 내에 있다면 캐릭터 이동
             transform.position = newPosition;
         }
+
+        
         
     }
+
 
     private void OnTriggerEnter2D(Collider2D collision)
 
     {
 
 
-        if (collision.gameObject.CompareTag("Item")) {
+        if (collision.gameObject.CompareTag("Item"))
+        {
             //moveSpeed += 1.0f;
-            //Destroy(ForDestroy);
-            print("초콜릿 찾았다 ");
+            Destroy(ForDestroy);
+            print("초콜릿 찾았다 ! ");
+           
 
         }
 
-        //    if (collision.gameObject.CompareTag("Monster"))
-        //    {
-        //        // 플레이어와 충돌한 경우 처리
+        if (collision.gameObject.CompareTag("Monster"))
+        {
+            // 플레이어와 충돌한 경우 처리
 
 
-        //        health--;
-        //        print("health :" + health);
-        //        moveSpeed -= 0.5f;
+            print("경비원이다 ! ");
+            //health--;
+            //print("health :" + health);
+            //moveSpeed -= 0.5f;
 
-        //    }
-        //    if (health == 0)
-        //    {
-        //        print("플레이어는 죽었습니다 . ");
-        //        Application.Quit();
+        }
 
-
-        //    }
 
 
 
     }
-
-
 
 
 }

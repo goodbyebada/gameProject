@@ -153,11 +153,11 @@ public class NewMonsterMoving : MonoBehaviour
 	}
 
 
-        private void OnDrawGizmosSelected()
-    {
-        // Draw a sphere around the enemy to show the chasing distance
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, chasingDistance);
-    }
+    //    private void OnDrawGizmosSelected()
+    //{
+    //    // Draw a sphere around the enemy to show the chasing distance
+    //    Gizmos.color = Color.red;
+    //    Gizmos.DrawWireSphere(transform.position, chasingDistance);
+    //}
 
 }
