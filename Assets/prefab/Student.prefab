@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 4766608438984469179}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 3.47, y: -0.94, z: 0}
-  m_LocalScale: {x: 0.3, y: 0.3, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -101,6 +101,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   tilemap: {fileID: 0}
+  health: 3
+  ForDestroy: {fileID: 0}
 --- !u!50 &4766608438984469183
 Rigidbody2D:
   serializedVersion: 4

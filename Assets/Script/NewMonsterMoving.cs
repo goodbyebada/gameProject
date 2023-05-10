@@ -13,7 +13,7 @@ public class NewMonsterMoving : MonoBehaviour
 	public Vector3 default_direction;
 	private Vector3 newPosition;
 
-	private float chasingDistance = 2.5f;
+	public float chasingDistance = 3.5f;
 	public float distanceToKeep = 0.5f;
 
 	public Tilemap tilemap;
@@ -68,7 +68,7 @@ public class NewMonsterMoving : MonoBehaviour
 
 		if (distance <= chasingDistance)
 		{
-			print("player 감지! 효과음 상태: " + audioSource.isPlaying);
+			//print("player 감지! 효과음 상태: " + audioSource.isPlaying);
 			MoveToTarget(); //타켓을 향해 이동
 		
 		}
@@ -86,13 +86,13 @@ public class NewMonsterMoving : MonoBehaviour
 		Vector3Int cellPosition = tilemap.WorldToCell(newPosition); // cell화 시킨 cellPosition -> tilemap에 있는지 확인
 		if (tilemap.HasTile(cellPosition))
 		{
-			print("tilemap has Tile");
+			//print("tilemap has Tile");
 			transform.position = newPosition; //tilemap 안에 있다면 현재 위치가 됨 -> 
 
 		}
 		else
 		{
-			print("	타일에 없다면 반대 방향으로 이동해");
+			//print("	타일에 없다면 반대 방향으로 이동해");
             //setRandomDirection(); //같은 랜덤 값 반환하느라 움직이지 않음 -> 계속 tilemap에 없는 값 반환 -> 다시 랜덤 무한반복 -> 안움직임 
             default_direction.x = -default_direction.x;
        
@@ -153,11 +153,11 @@ public class NewMonsterMoving : MonoBehaviour
 	}
 
 
-    //    private void OnDrawGizmosSelected()
-    //{
-    //    // Draw a sphere around the enemy to show the chasing distance
-    //    Gizmos.color = Color.red;
-    //    Gizmos.DrawWireSphere(transform.position, chasingDistance);
-    //}
+    private void OnDrawGizmosSelected()
+    {
+        // Draw a sphere around the enemy to show the chasing distance
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, chasingDistance);
+    }
 
 }
