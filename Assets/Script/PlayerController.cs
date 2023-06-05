@@ -9,20 +9,15 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed = 5.5f; // 이동 속도
     public Tilemap tilemap; // 타일맵
     public int health = 3;
-    public GameObject ForDestroy1;
-    public GameObject ForDestroy2;
+    public GameObject ForDestroy;
 
 
 
     void Start()
     {
-        //ForDestroy = GameObject.FindGameObjectWithTag("Item");
+        ForDestroy = GameObject.Find("Chocolate");        //삭제할 오브젝트 참조.
 
-
-        ForDestroy1 = GameObject.FindGameObjectWithTag("Item");
-        ForDestroy2 = GameObject.FindGameObjectWithTag("Item2");
-
-
+                               //삭제, 파괴 함수 Destroy에 오브젝트 이름 참조.
 
     }
     private void Update()
@@ -47,9 +42,6 @@ public class PlayerController : MonoBehaviour
             transform.position = newPosition;
         }
 
-
-        print("현재 player moveSpeed:  " + moveSpeed);
-
         
         
     }
@@ -62,21 +54,10 @@ public class PlayerController : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Item"))
         {
-            moveSpeed += 1.0f;
-            Destroy(ForDestroy1);
+            //moveSpeed += 1.0f;
+            Destroy(ForDestroy);
             print("초콜릿 찾았다 ! ");
            
-
-        }
-
-
-
-        if (collision.gameObject.CompareTag("Item2"))
-        {
-            moveSpeed += 1.0f;
-            Destroy(ForDestroy2);
-            print("초콜릿 찾았다 ! ");
-
 
         }
 
@@ -86,9 +67,9 @@ public class PlayerController : MonoBehaviour
 
 
             print("경비원이다 ! ");
-            health--;
+            //health--;
             //print("health :" + health);
-            moveSpeed -= 0.5f;
+            //moveSpeed -= 0.5f;
 
         }
 
